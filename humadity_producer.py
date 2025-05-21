@@ -1,34 +1,30 @@
-from kafka import KafkaProducer
+from confluent_kafka import Producer
 import json
 import time
 import random
-import threading
 
-producer = KafkaProducer(
-    bootstrap_servers='localhost:9092',
-    value_serializer=lambda v: json.dumps(v).encode('utf-8')
-)
+conf = {'bootstrap.servers': 'kafka:9092'}
+producer = Producer(conf)
 
-gudang_id = ['G1', 'G2', 'G3']
+gudang_ids = ['G1', 'G2', 'G3']
 
-def kirim_suhu():
+def delivery_report(err, msg):
+    if err is not None:
+        print(f"Delivery failed for message: {err}")
+    else:
+        # Decode message from bytes back to JSON string for display
+        print(msg.value().decode('utf-8'))
+        #print(f"Message delivered to {msg.topic()} partition [{msg.partition()}]")
+
+try:
     while True:
-        for gid in gudang_id:
-            suhu = random.randint(70, 90)
-            data = {"gudang_id": gid, "suhu": suhu}
-            producer.send('sensor-suhu-gudang', value=data)
-            print(f"[Suhu] Terkirim: {data}")
-        time.sleep(1)
-
-def kirim_kelembaban():
-    while True:
-        for gid in gudang_id:
+        for gudang_id in gudang_ids:
             kelembaban = random.randint(60, 80)
-            data = {"gudang_id": gid, "kelembaban": kelembaban}
-            producer.send('sensor-kelembapan-gudang', value=data)
-            print(f"[Kelembaban] Terkirim: {data}")
+            data = {"gudang_id": gudang_id, "kelembaban": kelembaban}
+            producer.produce("sensor-kelembaban-gudang", json.dumps(data).encode('utf-8'), callback=delivery_report)
+            producer.poll(0)
         time.sleep(1)
-
-# Buat thread untuk masing-masing jenis data
-threading.Thread(target=kirim_suhu).start()
-threading.Thread(target=kirim_kelembaban).start()
+except KeyboardInterrupt:
+    print("Producer kelembaban stopped.")
+finally:
+    producer.flush()

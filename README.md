@@ -123,8 +123,100 @@ Mahasiswa diharapkan dapat:
 
 ## Penyelesaian Soal
 
-Run Code
+- Run Docker Compose
 
 ```bash
+docker-compose up -d
+```
+
+![docker-compose-up](/img/docker-compose.png)
+
+- Check Docker Compose (Container)
+
+```bash
+docker ps
+docker-compose ps
+```
+
+![docker-compose-up](/img/docker-ps.png)
+
+- Setting Kafka
+
+```bash
+docker exec -it kafka bash
+```
+
+- Making Topic
+
+```bash
+kafka-topics --create --topic sensor-suhu-gudang --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+kafka-topics --create --topic sensor-kelembaban-gudang --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+```
+
+- Check Topic
+
+```bash
+kafka-topics --list --bootstrap-server localhost:9092
+```
+
+![docker-compose-up](/img/exec-kafka.png)
+
+- Setting Pyspark
+
+```bash
+docker exec -it pyspark bash
+```
+
+- Copy Path to Pyspark
+
+```bash
+docker cp ~/desktop/kuliah/semester-4/ai/kernel/kafka pyspark:/app/
+```
+
+![docker-compose-up](/img/copy-path.png)
+![docker-compose-up](/img/ls-pyspark.png)
+
+- Setting venv
 
 ```
+python3 -m venv venv
+```
+
+- Install Requirements
+
+```bash
+pip install -r requirements --no-cache-dir
+```
+
+![docker-compose-up](/img/install.png)
+
+- Run Producer and Consumer
+
+```bash
+python temprature_producer.py
+```
+
+![docker-compose-up](/img/python-suhu.png)
+
+```bash
+python humadity_producer.py
+```
+
+![docker-compose-up](/img/exec-pyspark.png)
+
+```bash
+spark-submit \
+ --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0 \
+ pyspark_consumer.py
+```
+
+![docker-compose-up](/img/kelembaban-pyspark.png)
+![docker-compose-up](/img/suhu-pyspark.png)
+
+- Stop Docker
+
+```bash
+docker-compose down -v
+```
+
+![docker-compose-up](/img/stop.png)
