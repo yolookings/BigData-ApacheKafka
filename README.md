@@ -16,6 +16,8 @@ Sebuah perusahaan logistik mengelola beberapa gudang penyimpanan yang menyimpan 
 
 Sensor akan mengirimkan data setiap detik. Perusahaan ingin memantau kondisi gudang secara real-time untuk mencegah kerusakan barang akibat suhu terlalu tinggi atau kelembaban berlebih.
 
+---
+
 `📋 Tugas Mahasiswa`
 
 `1. Buat Topik Kafka`
@@ -27,45 +29,55 @@ Buat dua topik di Apache Kafka:
 
 Topik ini akan digunakan untuk menerima data dari masing-masing sensor secara real-time.
 
+---
+
 `2. Simulasikan Data Sensor (Producer Kafka)`
 
 Buat dua Kafka producer terpisah:
 
-a. Producer Suhu
-Kirim data setiap detik
+- Producer Suhu
+  Kirim data setiap detik
 
-Format:
+  Format: `{"gudang_id": "G1", "suhu": 82}`
 
-{"gudang_id": "G1", "suhu": 82}
-b. Producer Kelembaban
-Kirim data setiap detik
+- Producer Kelembaban
+  Kirim data setiap detik
 
-Format:
+  Format: `{"gudang_id": "G1", "kelembaban": 75}`
 
-{"gudang_id": "G1", "kelembaban": 75}
-Gunakan minimal 3 gudang: G1, G2, G3.
+  Gunakan minimal 3 gudang: G1, G2, G3.
+
+---
 
 `3. Konsumsi dan Olah Data dengan PySpark`
-a. Buat PySpark Consumer
+
+**a. Buat PySpark Consumer**
+
 Konsumsi data dari kedua topik Kafka.
 
-b. Lakukan Filtering:
-Suhu > 80°C → tampilkan sebagai peringatan suhu tinggi
+**b. Lakukan Filtering:**
 
-Kelembaban > 70% → tampilkan sebagai peringatan kelembaban tinggi
+- Suhu > 80°C → tampilkan sebagai peringatan suhu tinggi
+- Kelembaban > 70% → tampilkan sebagai peringatan kelembaban tinggi
 
 Contoh Output:
+
+```bash
 [Peringatan Suhu Tinggi]
 Gudang G2: Suhu 85°C
+```
 
+```bash
 [Peringatan Kelembaban Tinggi]
-Gudang G3: Kelembaban 74% 4. Gabungkan Stream dari Dua Sensor
-Lakukan join antar dua stream berdasarkan gudang_id dan window waktu (misalnya 10 detik) untuk mendeteksi kondisi bahaya ganda.
+Gudang G3: Kelembaban 74%
+```
 
-c. Buat Peringatan Gabungan:
+**c. Buat Peringatan Gabungan:**
+
 Jika ditemukan suhu > 80°C dan kelembaban > 70% pada gudang yang sama, tampilkan peringatan kritis.
 
 ✅ Contoh Output Gabungan:
+
 [PERINGATAN KRITIS]
 Gudang G1:
 
@@ -90,18 +102,24 @@ Gudang G4:
 - Suhu: 79°C
 - Kelembaban: 75%
 - Status: Kelembaban tinggi, suhu aman
-  🎓 Tujuan Pembelajaran
-  Mahasiswa diharapkan dapat:
 
-Memahami cara kerja Apache Kafka dalam pengolahan data real-time.
+---
 
-Membuat Kafka Producer dan Consumer untuk simulasi data sensor.
+`4. Gabungkan Stream dari Dua Sensor`
 
-Mengimplementasikan stream filtering dengan PySpark.
+Lakukan join antar dua stream berdasarkan gudang_id dan window waktu (misalnya 10 detik) untuk mendeteksi kondisi bahaya ganda.
 
-Melakukan join multi-stream dan analisis gabungan dari berbagai sensor.
+---
 
-Mencetak hasil analitik berbasis kondisi kritis gudang ke dalam output console.
+`🎓 Tujuan Pembelajaran`
+
+Mahasiswa diharapkan dapat:
+
+- Memahami cara kerja Apache Kafka dalam pengolahan data real-time.
+- Membuat Kafka Producer dan Consumer untuk simulasi data sensor.
+- Mengimplementasikan stream filtering dengan PySpark.
+- Melakukan join multi-stream dan analisis gabungan dari berbagai sensor.
+- Mencetak hasil analitik berbasis kondisi kritis gudang ke dalam output console.
 
 ## Penyelesaian Soal
 
